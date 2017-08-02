@@ -1,0 +1,25 @@
+version: '2'
+services:
+  address_service:
+    container_name: address-service
+    build: ./services/address-service
+    ports:
+      - "8090:8080"
+
+  feature_service:
+    container_name: feature-service
+    build: ./services/feature-service
+    ports:
+      - "8091:8080"
+
+  userservice:
+    container_name: user-service
+    build: ./services/user-service
+    ports:
+      - "8092:8080"
+
+  graphqlservice:
+    container_name: graphql-service
+    build: ./services/graphql-service
+    ports:
+      - "8080:4000"

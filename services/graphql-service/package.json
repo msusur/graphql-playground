@@ -1,0 +1,26 @@
+{
+  "name": "graphql-playground",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "express": "^4.15.3",
+    "express-graphql": "^0.6.7",
+    "graphql": "^0.10.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "start": "node index.js",
+    "test": "echo 'no test yet'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/msusur/graphql-playground.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/msusur/graphql-playground/issues"
+  },
+  "homepage": "https://github.com/msusur/graphql-playground#readme"
+}
