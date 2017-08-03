@@ -1,10 +1,16 @@
 const { buildSchema } = require('graphql');
 
-// Construct a schema, using GraphQL schema language
-const applicationSchema = buildSchema(`
+const schema = buildSchema(`
+  type User {
+    id: String
+    name: String,
+    email: String,
+    password: String
+  }
+
   type Query {
-    hello: String
+    getUsers(id: String): [User]
   }
 `);
 
-export { applicationSchema };
+module.exports = { schema };
