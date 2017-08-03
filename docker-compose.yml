@@ -23,3 +23,9 @@ services:
     build: ./services/graphql-service
     ports:
       - "8080:4000"
+
+  db:
+    image: postgres
+    container_name: db
+    environment:
+        POSTGRES_PASSWORD: example
