@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const fetchJson = require('node-fetch-json');
-// const HOST_NAME = 'user-service';
-const HOST_NAME = 'localhost';
+const HOST_NAME = 'user-service';
+// const HOST_NAME = 'localhost';
 
 class UserProvider {
   getAllUsers() {
@@ -16,15 +16,15 @@ class UserProvider {
       .then(response => response.json());
   }
 
-  createUser(name, email, password) {
+  createUser(user) {
     return fetchJson(`http://${HOST_NAME}:8092/users`, {
       method: 'POST',
       body: {
-        name,
-        email,
-        password
+        name: user.name,
+        email: user.email,
+        password: user.password
       }
-    }).then((data) => data.json());
+    });
   }
 }
 

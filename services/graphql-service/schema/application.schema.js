@@ -31,7 +31,7 @@ const AddressType = new GraphQLObjectType({
       }
     }
   }
-})
+});
 
 const UserType = new GraphQLObjectType({
   name: 'User',
@@ -49,6 +49,31 @@ const UserType = new GraphQLObjectType({
         resolve: (args) => addressProvider.getAddress(args.id)
       }
     };
+  }
+});
+
+const UserInputType = new GraphQLInputObjectType({
+  name: 'UserInput',
+  description: 'Input user type.',
+  type: GraphQLInputObjectType,
+  fields: () => {
+    return {
+      name: { type: GraphQLString },
+      email: { type: GraphQLString },
+      password: { type: GraphQLString }
+    };
+  }
+});
+
+const AddressInputType = new GraphQLInputObjectType({
+  name: 'AddressInput',
+  description: 'Input Address type.',
+  type: GraphQLInputObjectType,
+  fields: () => {
+    return {
+      details: { type: GraphQLString },
+      city: { type: GraphQLString },
+    }
   }
 });
 
@@ -97,26 +122,35 @@ const MUTATION_FIELDS = {
   createUser: {
     type: UserType,
     args: {
-      userInput: {
-        type: UserType
+      user: {
+        type: new GraphQLNonNull(UserInputType)
       },
-      addressInput: {
-        type: AddressType)
+      address: {
+        type: new GraphQLNonNull(AddressInputType)
       }
     },
-    resolver: (source, args) => {
-      return userProvider.createUser(args.name, args.email, args.password)
+    resolve: (source, args) => {
+      return userProvider.createUser(args.user)
         .then((user) => {
           if (args.address) {
-            addressProvider.createAddress(user.id, args.address.detail, args.address.city);
+            addressProvider.createAddress(user.id, args.address);
           }
           return user;
         });
     }
+  },
+  createAddress: {
+    type: AddressType,
+    args: {
+      userid: {
+        type: new GraphQLNonNull(GraphQLString)
+      },
+      address: {
+        type: new GraphQLNonNull(AddressInputType)
+      }
+    },
+    resolve: (source, args) => addressProvider.createAddress(args.userid, args.address)
   }
-  // ,  createAddress: {
-
-  // }
 };
 
 const mutationType = new GraphQLObjectType({

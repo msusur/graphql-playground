@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 const fetchJson = require('node-fetch-json');
-// const HOST_NAME = 'address-service';
-const HOST_NAME = 'localhost';
+const HOST_NAME = 'address-service';
+// const HOST_NAME = 'localhost';
 
 class AddressProvider {
   getAddress(userid) {
@@ -12,13 +12,13 @@ class AddressProvider {
       });
   }
 
-  createAddress(userid, detail, city) {
+  createAddress(userid, address) {
     return fetchJson(`http://${HOST_NAME}:8090/address`, {
       method: 'POST',
       body: {
         userid,
-        detail,
-        city
+        details: address.details,
+        city: address.city
       }
     });
   }
