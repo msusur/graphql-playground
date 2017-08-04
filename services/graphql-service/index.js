@@ -1,18 +1,22 @@
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
-const { schema } = require('./schema/application.schema');
+const { GraphQLSchema } = require('graphql');
+const { schema, QueryObjectType } = require('./schema/application.schema');
 const userProvider = require('./data-providers/user-provider.js');
+const addressProvider = require('./data-providers/address-provider.js');
 const app = express();
 
 const rootValue = {
-  getUsers: ($id) => userProvider.getUsers($id)
-  //createUser: ($user) => userProvider.createUser($user)
 };
+
+let Schema = new GraphQLSchema({
+  query: QueryObjectType
+});
 
 
 app.use('/graphql', graphqlHTTP({
   graphiql: true,
-  schema,
+  schema: Schema,
   rootValue,
   graphiql: true,
 }));

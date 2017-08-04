@@ -33,7 +33,7 @@ app.post('/users', function (req, res) {
   }
 });
 
-var server = app.listen(8080, function () {
+var server = app.listen(8092, function () {
   var host = server.address().address,
     port = server.address().port;
 

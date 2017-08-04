@@ -13,6 +13,12 @@
     {
       "type": "node",
       "request": "launch",
+      "name": "Address Service",
+      "program": "${workspaceRoot}/services/address-service/index.js"
+    },
+    {
+      "type": "node",
+      "request": "launch",
       "name": "Graphql Service",
       "program": "${workspaceRoot}/services/graphql-service/index.js"
     }

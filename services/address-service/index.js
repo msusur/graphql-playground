@@ -2,38 +2,34 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const uuidv4 = require('uuid/v4');
-const address = [];
+const addressList = [];
 
 app.use(bodyParser.json());
 
-app.get('/address', function (req, res) {
-  res.status(200).json(address);
-});
-
-app.get('/address/:id', function (req, res) {
-  const id = req.params.id;
-  for (var i = 0; i < address.length; i++) {
-    if (address[i].id === id) {
-      res.status(200).json(address[i]);
-      return;
+app.get('/address/:userid', function (req, res) {
+  const id = req.params.userid;
+  const userAddress = [];
+  for (var i = 0; i < addressList.length; i++) {
+    if (addressList[i].userid === id) {
+      userAddress.push(addressList[i]);
     }
   }
-  res.status(404).end();
+  res.status(200).json(userAddress);
 });
 
 app.post('/address', function (req, res) {
   const address = req.body;
 
-  if (address && address.name && address.email && address.password) {
+  if (address && address.userid && address.details) {
     address.id = uuidv4();
-    address.push(address);
+    addressList.push(address);
     res.status(200).json(address);
   } else {
     res.status(400).end();
   }
 });
 
-var server = app.listen(8080, function () {
+var server = app.listen(8090, function () {
   var host = server.address().address,
     port = server.address().port;
 
