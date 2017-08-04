@@ -8,44 +8,46 @@ const {
   GraphQLInt,
   GraphQLList,
   GraphQLScalarType,
-  GraphQLEnumType
+  GraphQLEnumType,
+  GraphQLInputObjectType
 } = require('graphql');
 
 const userProvider = require('../data-providers/user-provider.js');
+const addressProvider = require('../data-providers/address-provider.js');
 
-
-// const schema = buildSchema(`
-//   type User {
-//     id: ID
-//     name: String!
-//     email: String!
-//     password: String!
-//     address: [Address]
-//   }
-
-//   type Address {
-//     id: ID
-//     detail: String!
-//     city: String!
-//     user: User!
-//   }
-
-//   type Query {
-//     getUsers(id: String): [User]
-//     getAddressByUser(userid: String!): [Address]
-//   }
-// `);
-
-let UserType = new GraphQLObjectType({
-  name: 'User',
-  description: 'user api',
+const AddressType = new GraphQLObjectType({
+  name: 'Address',
+  description: 'Address of the users.',
   type: GraphQLObjectType,
   fields: () => {
     return {
-      id: { type: GraphQLString },
+      id: { type: GraphQLID },
+      details: { type: GraphQLString },
+      city: { type: GraphQLString },
+      user: {
+        type: UserType,
+        description: 'Owner of the Address',
+        resolve: (args) => userProvider.getUser(args.userid)
+      }
+    }
+  }
+})
+
+const UserType = new GraphQLObjectType({
+  name: 'User',
+  description: 'Users of the application',
+  type: GraphQLObjectType,
+  fields: () => {
+    return {
+      id: { type: GraphQLID },
       name: { type: GraphQLString },
       email: { type: GraphQLString },
-      password: { type: GraphQLString }
+      password: { type: GraphQLString },
+      addresses: {
+        type: new GraphQLList(AddressType),
+        description: 'List of addresses of the user.',
+        resolve: (args) => addressProvider.getAddress(args.id)
+      }
     };
   }
 });
@@ -64,10 +66,24 @@ const FIELDS = {
     args: {
       id: {
         description: 'User id',
-        type: new GraphQLNonNull(GraphQLString)
+        type: GraphQLString
       },
     },
-    resolve: (_, { id, identity }) => userProvider.getUsers(id)
+    resolve: (_, { id }) => userProvider.getUser(id)
+  },
+  users: {
+    type: new GraphQLList(UserType),
+    resolve: (_) => userProvider.getAllUsers()
+  },
+  addresses: {
+    type: new GraphQLList(AddressType),
+    args: {
+      userid: {
+        description: 'User id.',
+        type: new GraphQLNonNull(GraphQLString)
+      }
+    },
+    resolve: (_, { userid }) => addressProvider.getAddress(userid)
   }
 };
 
@@ -77,4 +93,39 @@ const queryObjectType = new GraphQLObjectType({
   fields: () => FIELDS
 });
 
-module.exports = { QueryObjectType: queryObjectType };
+const MUTATION_FIELDS = {
+  createUser: {
+    type: UserType,
+    args: {
+      userInput: {
+        type: UserType
+      },
+      addressInput: {
+        type: AddressType)
+      }
+    },
+    resolver: (source, args) => {
+      return userProvider.createUser(args.name, args.email, args.password)
+        .then((user) => {
+          if (args.address) {
+            addressProvider.createAddress(user.id, args.address.detail, args.address.city);
+          }
+          return user;
+        });
+    }
+  }
+  // ,  createAddress: {
+
+  // }
+};
+
+const mutationType = new GraphQLObjectType({
+  name: 'ApplicationMutationAPI',
+  description: 'APIs for users to mutation',
+  fields: () => MUTATION_FIELDS
+});
+
+module.exports = {
+  QueryObjectType: queryObjectType,
+  MutationsType: mutationType
+};

@@ -1,31 +1,30 @@
 const fetch = require('node-fetch');
 const fetchJson = require('node-fetch-json');
+// const HOST_NAME = 'user-service';
+const HOST_NAME = 'localhost';
 
 class UserProvider {
   getAllUsers() {
-    return fetch('http://localhost:8092/users').then(body => body);
+    return fetch(`http://${HOST_NAME}:8092/users`).then(body => body.json());
   }
 
-  getUsers(id) {
+  getUser(id) {
     if (!id) {
       return this.getAllUsers();
     }
-    return fetch(`http://localhost:8092/users/${id}`)
-      .then(response => response.json())
-      .then((data) => {
-        return data;
-      });
+    return fetch(`http://${HOST_NAME}:8092/users/${id}`)
+      .then(response => response.json());
   }
 
   createUser(name, email, password) {
-    return fetchJson('http://localhost:8092/users', {
+    return fetchJson(`http://${HOST_NAME}:8092/users`, {
       method: 'POST',
       body: {
         name,
         email,
         password
       }
-    });
+    }).then((data) => data.json());
   }
 }
 

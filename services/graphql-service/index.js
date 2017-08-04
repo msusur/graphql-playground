@@ -1,16 +1,15 @@
 const express = require('express');
 const graphqlHTTP = require('express-graphql');
 const { GraphQLSchema } = require('graphql');
-const { schema, QueryObjectType } = require('./schema/application.schema');
-const userProvider = require('./data-providers/user-provider.js');
-const addressProvider = require('./data-providers/address-provider.js');
+const { schema, QueryObjectType, MutationsType } = require('./schema/application.schema');
 const app = express();
 
 const rootValue = {
 };
 
 let Schema = new GraphQLSchema({
-  query: QueryObjectType
+  query: QueryObjectType,
+  mutation: MutationsType
 });
 
 
