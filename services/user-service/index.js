@@ -2,7 +2,13 @@ const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
 const uuidv4 = require('uuid/v4');
-const users = [];
+const users = [
+  { id: "6517f9c4-5f1b-4327-a9c4-b3df60c17785", name: "John", email: "john@doe.com", password: "123" },
+  { id: "7e353f36-fba2-4f19-a16f-d95ad8864616", name: "Sarah", email: "sarah@doe.com", password: "1234" },
+  { id: "5d895ede-c681-4419-bb18-8b7de73c6746", name: "Michael", email: "mike@doe.com", password: "1235" },
+  { id: "3e38209e-2117-4fd3-8a57-dc8d2ed28f59", name: "Jessica", email: "jess@doe.com", password: "1236" },
+  { id: "dff76a34-4854-45da-8b79-c1817f451f51", name: "Clark", email: "clark@doe.com", password: "1237" },
+];
 
 app.use(bodyParser.json());
 
